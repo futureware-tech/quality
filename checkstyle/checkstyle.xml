@@ -87,7 +87,12 @@
 		<module name="LocalFinalVariableName"/>
 		<module name="LocalVariableName"/>
 		<module name="MagicNumber"/>
-		<module name="MemberName"/>
+		<module name="MemberName">
+			<property name="format" value="^m[A-Z][a-zA-Z0-9]*$"/>
+		</module>
+		<module name="StaticVariableName">
+			<property name="format" value="^s[A-Z][a-zA-Z0-9]*$"/>
+		</module>
 		<module name="MethodCount"/>
 		<module name="MethodParamPad"/>
 		<module name="MethodTypeParameterName"/>
@@ -138,7 +143,6 @@
 		</module>
 
 		<module name="SingleLineJavadoc"/>
-		<module name="StaticVariableName"/>
 		<module name="SummaryJavadoc"/>
 		<module name="SuppressWarnings"/>
 		<module name="SuppressWarningsHolder"/>

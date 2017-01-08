@@ -14,6 +14,10 @@
 	<module name="NewlineAtEndOfFile"/>
 	<module name="Translation"/>
 	<module name="UniqueProperties"/>
+
+	<!-- Respect @SuppressWarnings in the code -->
+	<module name="SuppressWarningsFilter"/>
+
 	<module name="TreeWalker">
 		<module name="AbbreviationAsWordInName"/>
 		<module name="AnnotationLocation"/>
@@ -144,8 +148,6 @@
 
 		<module name="SingleLineJavadoc"/>
 		<module name="SummaryJavadoc"/>
-		<module name="SuppressWarnings"/>
-		<module name="SuppressWarningsHolder"/>
 		<module name="ThrowsCount"/>
 		<module name="TodoComment">
 			<property name="format" value="(TODO|ToDo|todo|Todo)([^(]|$)"/>
@@ -163,6 +165,9 @@
 		</module>
 		<module name="WhitespaceAfter"/>
 		<module name="WhitespaceAround"/>
+
+		<!-- Allow the use of @SuppressWarnings -->
+		<module name="SuppressWarningsHolder"/>
 
 		<!-- Rely solely on Android Studio's "Reformat Code" feature.
 		<module name="Indentation"/>

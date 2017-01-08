@@ -37,6 +37,9 @@
 	<rule ref="rulesets/java/controversial.xml">
 		<exclude name="AtLeastOneConstructor"/>
 
+		<!-- False positivies with parameter names like "in" -->
+		<exclude name="AvoidPrefixingMethodParameters"/>
+
 		<!-- There's nothing bad in assigning "null" as a marker -->
 		<exclude name="NullAssignment"/>
 

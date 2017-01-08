@@ -57,6 +57,12 @@
 		<!-- TODO(dotdoom): why -->
 		<exclude name="LawOfDemeter"/>
 	</rule>
+	<rule ref="rulesets/java/coupling.xml/ExcessiveImports">
+		<properties>
+			<!-- Android Activities may import a lot of classes -->
+			<property name="minimum" value="40"/>
+		</properties>
+	</rule>
 
 	<rule ref="rulesets/java/design.xml">
 		<!-- There's nothing bad in using it wisely -->

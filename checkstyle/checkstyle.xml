@@ -71,7 +71,6 @@
 		<module name="InterfaceIsType"/>
 		<module name="InterfaceTypeParameterName"/>
 		<module name="JavadocStyle"/>
-		<module name="JavadocTagContinuationIndentation"/>
 		<module name="JavadocMethod">
 			<property name="scope" value="public"/>
 			<!-- Require javadoc for @Override methods as well (e.g. reason) -->
@@ -147,7 +146,13 @@
 		</module>
 
 		<module name="SingleLineJavadoc"/>
-		<module name="SummaryJavadoc"/>
+		<module name="SummaryJavadoc">
+			<property name="forbiddenSummaryFragments" value="^This method returns.*"/>
+			<!-- Android Studio's "Reformat Code" puts {@inheritDoc} on a new
+				 line, leaving it without a period. -->
+			<property name="period" value=""/>
+		</module>
+
 		<module name="ThrowsCount"/>
 		<module name="TodoComment">
 			<property name="format" value="(TODO|ToDo|todo|Todo)([^(]|$)"/>
@@ -171,6 +176,7 @@
 
 		<!-- Rely solely on Android Studio's "Reformat Code" feature.
 		<module name="Indentation"/>
+		<module name="JavadocTagContinuationIndentation"/>
 		-->
 
 		<!-- This module is only useful for reports - it doesn't do an actual check.

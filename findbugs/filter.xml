@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+	<Match>
+		<Source name="~(Manifest|R)\.java"/>
+	</Match>
+
+	<Match>
+		<!--
+			A number of classes could be refactored. But as Android is built on
+			Java 8, which doesn't support lambdas, these most often are just a
+			replacement. It's not worth loosing this convenience.
+		-->
+		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON"/>
+	</Match>
+</FindBugsFilter>

@@ -1,0 +1,72 @@
+apply plugin: 'net.ltgt.errorprone'
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+
+checkstyle {
+    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html
+    toolVersion '7.3'
+}
+
+pmd {
+    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.PmdExtension.html
+    toolVersion '5.5.2'
+}
+
+findbugs {
+    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.FindBugsExtension.html
+    toolVersion '3.0.1'
+}
+
+// Have to create our own tasks because Android's sourceSets:
+// https://android.googlesource.com/platform/tools/build/+/master/gradle/src/main/groovy/com/android/build/gradle/internal/api/DefaultAndroidSourceSet.java
+// are not compatible with Gradle sourceSets:
+// https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/SourceSet.html
+// therefore checkstyle/pmd/etc constructors don't see them.
+
+task checkstyle(type: Checkstyle) {
+    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html
+    source android.sourceSets.main.getJavaDirectories()
+    classpath = files()
+    ignoreFailures = false
+}
+
+task pmd(type: Pmd) {
+    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Pmd.html
+    source android.sourceSets.main.getJavaDirectories()
+    classpath = files()
+    ignoreFailures = false
+    ruleSetFiles = files('config/pmd/ruleset.xml')
+    consoleOutput = true
+}
+
+task findbugs(type: FindBugs) {
+    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.FindBugs.html
+    source android.sourceSets.main.getJavaDirectories()
+    classpath = files()
+    classes = files("${project.rootDir}/app/build/intermediates/classes")
+    effort = 'max'
+    // Contrary to what one may think, 'low' means 'tell about everything'
+    reportLevel = 'low'
+    excludeFilter = new File('config/findbugs/filter.xml')
+}
+
+
+// TODO(dotdoom): replace with something simpler, e.g.
+//                check.dependsOn 'checkstyle', 'pmd'
+project.afterEvaluate {
+    tasks.withType(tasks['lint'].class) {
+        // TODO(dotdoom): add findbugs. Note: it depends on classes,
+        //                i.e. assemble step. I.e. the project has to be
+        //                reassembled before running findbugs for best results.
+        dependsOn 'checkstyle', 'pmd'
+    }
+}
+
+android {
+    lintOptions {
+        // https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.LintOptions.html
+        // Enable all warnings, even those disabled by default.
+        checkAllWarnings true
+    }
+}

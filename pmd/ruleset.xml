@@ -54,7 +54,7 @@
 	</rule>
 
 	<rule ref="rulesets/java/coupling.xml">
-		<!-- TODO(dotdoom): why -->
+		<!-- It's an overkill, e.g. for the logs -->
 		<exclude name="LawOfDemeter"/>
 	</rule>
 	<rule ref="rulesets/java/coupling.xml/ExcessiveImports">
@@ -87,10 +87,10 @@
 		<exclude name="DoNotUseThreads"/>
 	</rule>
 
-	<!--
-		We don't use JavaBeans. Yet.
-		<rule ref="rulesets/java/javabeans.xml"/>
-	-->
+	<rule ref="rulesets/java/javabeans.xml">
+		<!-- We don't use JavaBeans extensively -->
+		<exclude name="BeanMembersShouldSerialize"/>
+	</rule>
 
 	<!-- TODO(dotdoom): make this useful by including jUnit into sourceset -->
 	<rule ref="rulesets/java/junit.xml"/>

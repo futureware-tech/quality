@@ -139,18 +139,21 @@ project.afterEvaluate {
 task printLint {
     doLast {
         def destination = android.lintOptions.xmlOutput.getAbsolutePath()
-        // Write JUnit-style lint for CircleCI to pick up.
-        ant.xslt(
-            in: destination,
-            out: "${project.rootDir}/app/build/test-results/lint/results.xml",
-            style: 'config/android-lint/junit.xslt',
-        )
-        ant.xslt(
-            in: destination,
-            out: destination + '.txt',
-            style: 'config/android-lint/text.xslt',
-        )
-        System.err.println file(destination + '.txt').text
+        // The file is not created on successful run.
+        if (file(destination).exists()) {
+            // Write JUnit-style lint for CircleCI to pick up.
+            ant.xslt(
+                in: destination,
+                out: "${project.rootDir}/app/build/test-results/lint/results.xml",
+                style: 'config/android-lint/junit.xslt',
+            )
+            ant.xslt(
+                in: destination,
+                out: destination + '.txt',
+                style: 'config/android-lint/text.xslt',
+            )
+            System.err.println file(destination + '.txt').text
+        }
     }
 }
 

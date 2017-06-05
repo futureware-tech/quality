@@ -1,7 +1,22 @@
-apply plugin: 'net.ltgt.errorprone'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 apply plugin: 'findbugs'
+
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+    dependencies {
+        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
+    }
+}
+apply plugin: net.ltgt.gradle.errorprone.ErrorPronePlugin
+
+// TODO(dotdoom): replace 'buildscript' and 'apply' above with just
+// plugins {
+//     id 'net.ltgt.errorprone' version '0.0.10'
+// }
+// once https://docs.gradle.org/2.9/userguide/plugins.html#N11AC8 happens.
 
 checkstyle {
     // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html
@@ -24,42 +39,118 @@ findbugs {
 // https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/SourceSet.html
 // therefore checkstyle/pmd/etc constructors don't see them.
 
+// TODO(dotdoom): it's time to move this into .groovy or .java and clean up.
+
 task checkstyle(type: Checkstyle) {
     // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html
+    group 'verification'
     source android.sourceSets.main.getJavaDirectories()
     classpath = files()
     ignoreFailures = false
+
+    showViolations = false
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+    finalizedBy 'printCheckstyle'
+}
+task printCheckstyle {
+    doLast {
+        def destination = tasks.findByName('checkstyle').reports.getXml()
+            .getDestination().getAbsolutePath()
+        ant.xslt(
+            in: destination,
+            out: destination + '.txt',
+            style: 'config/checkstyle/text.xslt',
+        )
+        System.err.println file(destination + '.txt').text
+    }
 }
 
 task pmd(type: Pmd) {
     // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Pmd.html
+    group 'verification'
     source android.sourceSets.main.getJavaDirectories()
     classpath = files()
     ignoreFailures = false
     ruleSetFiles = files('config/pmd/ruleset.xml')
-    consoleOutput = true
+
+    consoleOutput = false
+    reports {
+        xml.enabled true
+        html.enabled false
+    }
+    finalizedBy 'printPmd'
+}
+task printPmd {
+    doLast {
+        def destination = tasks.findByName('pmd').reports.getXml()
+            .getDestination().getAbsolutePath()
+        ant.xslt(
+            in: destination,
+            out: destination + '.txt',
+            style: 'config/pmd/text.xslt',
+        )
+        System.err.println file(destination + '.txt').text
+    }
 }
 
-task findbugs(type: FindBugs) {
+task findbugs(type: FindBugs, dependsOn: 'assembleDebug') {
     // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.FindBugs.html
+    group 'verification'
     source android.sourceSets.main.getJavaDirectories()
     classpath = files()
     classes = files("${project.rootDir}/app/build/intermediates/classes")
     effort = 'max'
     // Contrary to what one may think, 'low' means 'tell about everything'
     reportLevel = 'low'
-    excludeFilter = new File('config/findbugs/filter.xml')
+    excludeFilter = file('config/findbugs/filter.xml')
+    reports {
+        emacs.enabled false
+        html.enabled false
+        text.enabled false
+        xml {
+            enabled true
+            setWithMessages true
+        }
+    }
+    finalizedBy 'printFindbugs'
+}
+task printFindbugs {
+    doLast {
+        def destination = tasks.findByName('findbugs').reports.getXml()
+            .getDestination().getAbsolutePath()
+        ant.xslt(
+            in: destination,
+            out: destination + '.txt',
+            style: 'config/findbugs/text.xslt',
+        )
+        System.err.println file(destination + '.txt').text
+    }
 }
 
-
-// TODO(dotdoom): replace with something simpler, e.g.
-//                check.dependsOn 'checkstyle', 'pmd'
 project.afterEvaluate {
     tasks.withType(tasks['lint'].class) {
-        // TODO(dotdoom): add findbugs. Note: it depends on classes,
-        //                i.e. assemble step. I.e. the project has to be
-        //                reassembled before running findbugs for best results.
-        dependsOn 'checkstyle', 'pmd'
+        dependsOn 'checkstyle', 'pmd', 'findbugs'
+        finalizedBy 'printLint'
+    }
+}
+task printLint {
+    doLast {
+        def destination = android.lintOptions.xmlOutput.getAbsolutePath()
+        // Write JUnit-style lint for CircleCI to pick up.
+        ant.xslt(
+            in: destination,
+            out: "${project.rootDir}/app/build/test-results/lint/results.xml",
+            style: 'config/android-lint/junit.xslt',
+        )
+        ant.xslt(
+            in: destination,
+            out: destination + '.txt',
+            style: 'config/android-lint/text.xslt',
+        )
+        System.err.println file(destination + '.txt').text
     }
 }
 
@@ -68,5 +159,12 @@ android {
         // https://google.github.io/android-gradle-dsl/current/com.android.build.gradle.internal.dsl.LintOptions.html
         // Enable all warnings, even those disabled by default.
         checkAllWarnings true
+        warningsAsErrors true
+        abortOnError true
+
+        textReport false
+        htmlReport false
+        xmlReport true
+        xmlOutput file('build/reports/android-lint.xml')
     }
 }

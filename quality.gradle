@@ -171,3 +171,20 @@ android {
         xmlOutput file('build/reports/android-lint.xml')
     }
 }
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += [
+        '-Xlint:all',
+        '-XepAllDisabledChecksAsWarnings',
+        '-XepDisableWarningsInGeneratedCode',
+
+        // Don't want to annotate all modifiable references with "@Var".
+        '-Xep:Var:OFF',
+
+        // Sad but need Firebase-generated R.java to have @Generated.
+        '-Xep:ConstantField:OFF',
+        '-Xep:PrivateConstructorForUtilityClass:OFF',
+
+        '-Werror',
+    ]
+}

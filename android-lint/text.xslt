@@ -11,6 +11,8 @@
 			<xsl:value-of select="location/@file"/>
 			<xsl:text>:</xsl:text>
 			<xsl:value-of select="location/@line"/>
+			<xsl:text>: AndroidLint.</xsl:text>
+			<xsl:value-of select="@id"/>
 			<xsl:text>: </xsl:text>
 			<xsl:value-of select="@message"/>
 			<xsl:text>&#xa;</xsl:text>

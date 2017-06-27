@@ -11,11 +11,11 @@
 			<xsl:value-of select="../@name"/>
 			<xsl:text>:</xsl:text>
 			<xsl:value-of select="@beginline"/>
-			<xsl:text>: </xsl:text>
+			<xsl:text>: PMD.</xsl:text>
 			<xsl:value-of select="@rule"/>
 			<xsl:text>: </xsl:text>
 			<xsl:value-of select="normalize-space(text())"/>
-			<xsl:text> (PMD)&#xa;</xsl:text>
+			<xsl:text>&#xa;</xsl:text>
 		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>

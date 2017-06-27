@@ -12,9 +12,10 @@
 			<xsl:text>:</xsl:text>
 			<xsl:value-of select="@line"/>
 			<xsl:text>: </xsl:text>
+			<xsl:value-of select="@source"/>
+			<xsl:text>: </xsl:text>
 			<xsl:value-of select="@message"/>
-			<!-- TODO(dotdoom): add ../@source to identify issue -->
-			<xsl:text> (checkstyle)&#xa;</xsl:text>
+			<xsl:text>&#xa;</xsl:text>
 		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>

@@ -25,10 +25,11 @@
 			</xsl:if>
 			<xsl:text>:</xsl:text>
 			<xsl:value-of select="@start"/>
+			<xsl:text>: FindBugs.</xsl:text>
+			<xsl:value-of select="ancestor::BugInstance[1]/@type"/>
 			<xsl:text>: </xsl:text>
 			<xsl:value-of select="ancestor::BugInstance[1]/LongMessage/text()"/>
-			<!-- TODO(dotdoom): add BugInstance to identify the issue. -->
-			<xsl:text> (FindBugs)&#xa;</xsl:text>
+			<xsl:text>&#xa;</xsl:text>
 		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>

@@ -51,17 +51,17 @@
 			* DD when variable matches method name
 			* DU when passing variable to another class constructor -->
 		<exclude name="DataflowAnomalyAnalysis"/>
+
+		<!-- comments.CommentDefaultAccessModifier covers it -->
+		<exclude name="DefaultPackage"/>
 	</rule>
 
 	<rule ref="rulesets/java/coupling.xml">
 		<!-- It's an overkill, e.g. for the logs -->
 		<exclude name="LawOfDemeter"/>
-	</rule>
-	<rule ref="rulesets/java/coupling.xml/ExcessiveImports">
-		<properties>
-			<!-- Android Activities may import a lot of classes -->
-			<property name="minimum" value="40"/>
-		</properties>
+
+		<!-- Already covered by checkstyle.ClassFanOutComplexity -->
+		<exclude name="ExcessiveImports"/>
 	</rule>
 
 	<rule ref="rulesets/java/design.xml">
@@ -71,9 +71,16 @@
 		<!-- Don't want the last argument to be varargs -->
 		<exclude name="UseVarargs"/>
 
-		<!-- Switch is more readable in onClick listeners -->
-		<!-- TODO(dotdoom): re-enable once each UI element gets its own onClick -->
+		<!-- Switch is more readable in onAddUpdateButtonClick listeners -->
+		<!-- TODO(dotdoom): re-enable once each UI element gets its own onAddUpdateButtonClick -->
 		<exclude name="TooFewBranchesForASwitchStatement"/>
+
+		<!--
+			This is a useful check, however it doesn't play well with
+			controversial.DefaultPackage. Disabled for now.
+			https://sourceforge.net/p/pmd/discussion/188192/thread/c8ce7808/
+		-->
+		<exclude name="AccessorMethodGeneration"/>
 	</rule>
 
 	<rule ref="rulesets/java/empty.xml"/>

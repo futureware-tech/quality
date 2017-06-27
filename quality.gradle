@@ -20,12 +20,12 @@ apply plugin: net.ltgt.gradle.errorprone.ErrorPronePlugin
 
 checkstyle {
     // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html
-    toolVersion '7.3'
+    toolVersion '7.8.2'
 }
 
 pmd {
     // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.PmdExtension.html
-    toolVersion '5.5.2'
+    toolVersion '5.8.0'
 }
 
 findbugs {
@@ -174,7 +174,8 @@ android {
 
 tasks.withType(JavaCompile) {
     options.compilerArgs += [
-        '-Xlint:all',
+        // Disable "No processor claimed any of these annotations" (@Inject).
+        '-Xlint:all,-processing',
         '-XepAllDisabledChecksAsWarnings',
         '-XepDisableWarningsInGeneratedCode',
 
@@ -184,6 +185,9 @@ tasks.withType(JavaCompile) {
         // Sad but need Firebase-generated R.java to have @Generated.
         '-Xep:ConstantField:OFF',
         '-Xep:PrivateConstructorForUtilityClass:OFF',
+
+        // Doesn't play well with Dagger.
+        '-Xep:InjectScopeAnnotationOnInterfaceOrAbstractClass:OFF',
 
         '-Werror',
     ]

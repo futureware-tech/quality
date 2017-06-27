@@ -35,8 +35,23 @@
 		<module name="BooleanExpressionComplexity"/>
 		<module name="CatchParameterName"/>
 		<module name="ClassFanOutComplexity">
-			<!-- Activities depend on lots of android.* classes -->
-			<property name="max" value="30"/>
+			<!--
+				This rule has very poor configuration options:
+				excludedPackages can't contain any wildcards;
+				excludeClassesRegexps are short (i.e. non-canonical) names.
+			-->
+			<property name="excludedPackages" value="android.text"/>
+			<property name="excludedPackages" value="android.view"/>
+			<property name="excludedPackages" value="android.widget"/>
+			<property name="excludedPackages" value="android.content"/>
+			<property name="excludedPackages" value="android.support.v4.view"/>
+			<property name="excludedPackages" value="android.support.v7.app"/>
+			<property name="excludedPackages"
+				value="android.support.v7.widget"/>
+			<property name="excludedPackages"
+				value="android.support.annotation"/>
+			<property name="excludedPackages"
+				value="com.google.android.gms.appinvite"/>
 		</module>
 		<module name="ClassTypeParameterName"/>
 		<module name="CommentsIndentation"/>
@@ -188,9 +203,25 @@
 		<module name="UpperEll"/>
 		<module name="VariableDeclarationUsageDistance"/>
 		<module name="VisibilityModifier">
+			<!--
+				Canonical annotations don't always work,
+				probably because of code generation.
+			-->
+
 			<property
 				name="ignoreAnnotationCanonicalNames"
-				value="com.google.common.annotations.VisibleForTesting, BindView, BindViews"/>
+				value="VisibleForTesting"/>
+			<!-- ButterKnife -->
+			<property
+				name="ignoreAnnotationCanonicalNames"
+				value="BindView"/>
+			<property
+				name="ignoreAnnotationCanonicalNames"
+				value="BindViews"/>
+			<!-- Dagger -->
+			<property
+				name="ignoreAnnotationCanonicalNames"
+				value="javax.inject.Inject"/>
 		</module>
 		<module name="WhitespaceAfter"/>
 		<module name="WhitespaceAround"/>

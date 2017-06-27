@@ -15,7 +15,7 @@
 			<xsl:value-of select="@rule"/>
 			<xsl:text>: </xsl:text>
 			<xsl:value-of select="normalize-space(text())"/>
-			<xsl:text>&#xa;</xsl:text>
+			<xsl:text> (PMD)&#xa;</xsl:text>
 		</xsl:for-each>
 	</xsl:template>
 </xsl:stylesheet>

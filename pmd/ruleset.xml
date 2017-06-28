@@ -102,7 +102,10 @@
 	<!-- TODO(dotdoom): make this useful by including jUnit into sourceset -->
 	<rule ref="rulesets/java/junit.xml"/>
 
-	<rule ref="rulesets/java/logging-jakarta-commons.xml"/>
+	<rule ref="rulesets/java/logging-jakarta-commons.xml">
+		<!-- We have ProGuard for this -->
+		<exclude name="GuardLogStatement"/>
+	</rule>
 
 	<rule ref="rulesets/java/logging-java.xml"/>
 

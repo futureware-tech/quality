@@ -17,12 +17,14 @@
 				</xsl:for-each>
 			</xsl:variable>
 
-			<xsl:if test="$fullpath = ''">
-				<xsl:value-of select="$sourcepath"/>
-			</xsl:if>
-			<xsl:if test="$fullpath != ''">
-				<xsl:value-of select="$fullpath"/>
-			</xsl:if>
+			<xsl:choose>
+				<xsl:when test="$fullpath = ''">
+					<xsl:value-of select="$sourcepath"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$fullpath"/>
+				</xsl:otherwise>
+			</xsl:choose>
 			<xsl:text>:</xsl:text>
 			<xsl:value-of select="@start"/>
 			<xsl:text>: FindBugs.</xsl:text>

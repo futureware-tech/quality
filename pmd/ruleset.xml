@@ -107,7 +107,10 @@
 		<exclude name="GuardLogStatement"/>
 	</rule>
 
-	<rule ref="rulesets/java/logging-java.xml"/>
+	<rule ref="rulesets/java/logging-java.xml">
+		<!-- We have ProGuard for this -->
+		<exclude name="GuardLogStatementJavaUtil"/>
+	</rule>
 
 	<rule ref="rulesets/java/migrating.xml"/>
 

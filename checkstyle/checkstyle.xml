@@ -8,7 +8,17 @@
 <module name="Checker">
 	<module name="FileLength"/>
 	<module name="FileTabCharacter"/>
-	<module name="Header"/>
+
+	<!--
+		These checks require configuration an can't be used in default setup.
+
+		<module name="Header">
+	-->
+
+	<module name="RegexpHeader">
+		<property name="header" value="^/\*$\n^ \* Copyright "/>
+		<property name="fileExtensions" value="java"/>
+	</module>
 	<module name="NewlineAtEndOfFile"/>
 	<module name="Translation"/>
 	<module name="UniqueProperties"/>
@@ -249,7 +259,6 @@
 		configuration.
 			<module name="ImportControl"/>
 			<module name="Regexp"/>
-			<module name="RegexpHeader"/>
 			<module name="RegexpMultiline"/>
 			<module name="RegexpOnFilename"/>
 			<module name="RegexpSingleline"/>

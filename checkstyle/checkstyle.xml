@@ -159,8 +159,12 @@
 		<module name="ParenPad"/>
 		<module name="RedundantImport"/>
 		<module name="RedundantModifier"/>
-		<module name="Regexp"/>
-		<module name="RegexpSinglelineJava"/>
+		<module name="RegexpSinglelineJava">
+			<property name="format" value="\sLog\.[a-z]+\("/>
+			<property name="message"
+				value="Don't use Android Log directly; use slf4j instead"/>
+			<property name="ignoreComments" value="true"/>
+		</module>
 		<module name="RequireThis"/>
 		<module name="RightCurly"/>
 
@@ -244,6 +248,7 @@
 		These modules are used to enforce specific rules and require
 		configuration.
 			<module name="ImportControl"/>
+			<module name="Regexp"/>
 			<module name="RegexpHeader"/>
 			<module name="RegexpMultiline"/>
 			<module name="RegexpOnFilename"/>

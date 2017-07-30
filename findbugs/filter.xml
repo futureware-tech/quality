@@ -21,4 +21,12 @@
 		-->
 		<Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON"/>
 	</Match>
+
+	<Match>
+		<!--
+			slf4j uses this field with dynamic binding to veryfy API version.
+		-->
+		<Field name="REQUESTED_API_VERSION"/>
+		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,MS_SHOULD_BE_FINAL"/>
+	</Match>
 </FindBugsFilter>

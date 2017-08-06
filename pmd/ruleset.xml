@@ -110,6 +110,11 @@
 	<rule ref="rulesets/java/logging-java.xml">
 		<!-- We have ProGuard for this -->
 		<exclude name="GuardLogStatementJavaUtil"/>
+		<!--
+			Doesn't recognize new slf4j format with throwable as an optional
+			last argument.
+		-->
+		<exclude name="InvalidSlf4jMessageFormat"/>
 	</rule>
 
 	<rule ref="rulesets/java/migrating.xml"/>

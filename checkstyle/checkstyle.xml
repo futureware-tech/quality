@@ -170,9 +170,10 @@
 		<module name="RedundantImport"/>
 		<module name="RedundantModifier"/>
 		<module name="RegexpSinglelineJava">
-			<property name="format" value="\sLog\.[a-z]+\("/>
+			<property name="id" value="NoAndroidLog"/>
+			<property name="format" value="\sLog\."/>
 			<property name="message"
-				value="Don't use Android Log directly; use slf4j instead"/>
+				value="Do not use Android Log directly; use slf4j instead"/>
 			<property name="ignoreComments" value="true"/>
 		</module>
 		<module name="RequireThis"/>

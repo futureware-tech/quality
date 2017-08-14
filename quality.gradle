@@ -8,15 +8,18 @@ buildscript {
     }
     dependencies {
         classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
+        classpath 'com.chaitanyapramod.gradle:findbugs-android:1.0'
     }
 }
 apply plugin: net.ltgt.gradle.errorprone.ErrorPronePlugin
+apply plugin: com.chaitanyapramod.gradle.android.findbugs.FindBugsAndroidPlugin
 
 // TODO(dotdoom): replace 'buildscript' and 'apply' above with just
 // plugins {
 //     id 'net.ltgt.errorprone' version '0.0.10'
 // }
-// once https://docs.gradle.org/2.9/userguide/plugins.html#N11AC8 happens.
+// once the section about "Can only be used in build scripts" goes away:
+// https://docs.gradle.org/4.1-rc-1/userguide/plugins.html#plugins_dsl_limitations
 
 checkstyle {
     // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html
@@ -31,6 +34,11 @@ pmd {
 findbugs {
     // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.FindBugsExtension.html
     toolVersion '3.0.1'
+    group 'Verification'
+    effort = 'max'
+    // Contrary to what one may think, 'low' means 'tell about everything'
+    reportLevel = 'low'
+    excludeFilter = file('config/findbugs/filter.xml')
 }
 
 // Have to create our own tasks because Android's sourceSets:
@@ -39,103 +47,124 @@ findbugs {
 // https://docs.gradle.org/current/javadoc/org/gradle/api/tasks/SourceSet.html
 // therefore checkstyle/pmd/etc constructors don't see them.
 
-// TODO(dotdoom): it's time to move this into .groovy or .java and clean up.
-
-task checkstyle(type: Checkstyle) {
-    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html
-    group 'verification'
-    source android.sourceSets.main.getJavaDirectories()
-    classpath = files()
-    ignoreFailures = false
-
-    showViolations = false
-    reports {
-        xml.enabled true
-        html.enabled false
-    }
-    finalizedBy 'printCheckstyle'
-}
-task printCheckstyle {
-    doLast {
-        def destination = tasks.findByName('checkstyle').reports.getXml()
-            .getDestination().getAbsolutePath()
-        ant.xslt(
-            in: destination,
-            out: destination + '.txt',
-            style: 'config/checkstyle/text.xslt',
-        )
-        System.err.println file(destination + '.txt').text
-    }
+def sourceDirs(variant) {
+    variant.sourceSets.java.srcDirs.collect { it.path  }.flatten()
 }
 
-task pmd(type: Pmd) {
-    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Pmd.html
-    group 'verification'
-    source android.sourceSets.main.getJavaDirectories()
-    classpath = files()
-    ignoreFailures = false
-    ruleSetFiles = files('config/pmd/ruleset.xml')
+def defineCheckstyle(variant) {
+    def name = variant.name.capitalize()
+    task "checkstyle$name", type: Checkstyle, {
+        // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html
+        group 'Verification'
+        source sourceDirs(variant)
+        classpath = variant.javaCompile.classpath
+        ignoreFailures = false
 
-    consoleOutput = false
-    reports {
-        xml.enabled true
-        html.enabled false
+        showViolations = false
+        reports {
+            xml.enabled true
+            html.enabled false
+        }
+        finalizedBy "printCheckstyle$name"
     }
-    finalizedBy 'printPmd'
-}
-task printPmd {
-    doLast {
-        def destination = tasks.findByName('pmd').reports.getXml()
-            .getDestination().getAbsolutePath()
-        ant.xslt(
-            in: destination,
-            out: destination + '.txt',
-            style: 'config/pmd/text.xslt',
-        )
-        System.err.println file(destination + '.txt').text
-    }
-}
-
-task findbugs(type: FindBugs, dependsOn: 'assembleDebug') {
-    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.FindBugs.html
-    group 'verification'
-    source android.sourceSets.main.getJavaDirectories()
-    classpath = files()
-    classes = files("${project.rootDir}/app/build/intermediates/classes")
-    effort = 'max'
-    // Contrary to what one may think, 'low' means 'tell about everything'
-    reportLevel = 'low'
-    excludeFilter = file('config/findbugs/filter.xml')
-    reports {
-        emacs.enabled false
-        html.enabled false
-        text.enabled false
-        xml {
-            enabled true
-            setWithMessages true
+    task "printCheckstyle$name" {
+        doLast {
+            def destination = tasks.findByName("checkstyle$name").reports.getXml()
+                .getDestination().getAbsolutePath()
+            ant.xslt(
+                in: destination,
+                out: destination + '.txt',
+                style: 'config/checkstyle/text.xslt',
+            )
+            System.err.println file(destination + '.txt').text
         }
     }
-    finalizedBy 'printFindbugs'
 }
-task printFindbugs {
-    doLast {
-        def destination = tasks.findByName('findbugs').reports.getXml()
-            .getDestination().getAbsolutePath()
-        ant.xslt(
-            in: destination,
-            out: destination + '.txt',
-            style: 'config/findbugs/text.xslt',
-        )
-        System.err.println file(destination + '.txt').text
+
+def definePMD(variant) {
+    def name = variant.name.capitalize()
+    task "pmd$name", type: Pmd, {
+        // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Pmd.html
+        group 'Verification'
+        source sourceDirs(variant)
+        classpath = variant.javaCompile.classpath
+        ignoreFailures = false
+        ruleSetFiles = files('config/pmd/ruleset.xml')
+
+        consoleOutput = false
+        reports {
+            xml.enabled true
+            html.enabled false
+        }
+        finalizedBy "printPmd$name"
     }
+    task "printPmd$name" {
+        doLast {
+            def destination = tasks.findByName("pmd$name").reports.getXml()
+                .getDestination().getAbsolutePath()
+            ant.xslt(
+                in: destination,
+                out: destination + '.txt',
+                style: 'config/pmd/text.xslt',
+            )
+            System.err.println file(destination + '.txt').text
+        }
+    }
+}
+
+def getVariants() {
+    if (project.plugins.hasPlugin('com.android.library')) {
+        project.android['libraryVariants']
+    }
+    project.android['applicationVariants']
+}
+
+getVariants().all { variant ->
+    defineCheckstyle(variant)
+    definePMD(variant)
+    def name = variant.name.capitalize()
+    task "checkQuality$name", dependsOn: [
+        "checkstyle$name",
+        "pmd$name",
+        "findbugs$name",
+        "lint$name",
+    ], group: 'Verification'
 }
 
 project.afterEvaluate {
     tasks.withType(tasks['lint'].class) {
-        dependsOn 'checkstyle', 'pmd', 'findbugs'
         finalizedBy 'printLint'
     }
+
+    tasks.withType(FindBugs) { fbTask ->
+        // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.FindBugs.html
+        fbTask.reports {
+            emacs.enabled false
+            html.enabled false
+            text.enabled false
+            xml {
+                enabled true
+                setWithMessages true
+            }
+        }
+
+        def name = fbTask.name.capitalize()
+        task "print$name" {
+            doLast {
+                def destination = fbTask.reports.getXml().getDestination()
+                        .getAbsolutePath()
+                ant.xslt(
+                    in: destination,
+                    out: destination + '.txt',
+                    style: 'config/findbugs/text.xslt',
+                )
+                System.err.println file(destination + '.txt').text
+            }
+        }
+        fbTask.finalizedBy "print$name"
+    }
 }
+
 task printLint {
     doLast {
         def destination = android.lintOptions.xmlOutput.getAbsolutePath()
@@ -191,9 +220,6 @@ tasks.withType(JavaCompile) {
 
         // Doesn't work with ButterKnife.
         '-Xep:ConstructorLeaksThis:OFF',
-
-        // TODO(dotdoom): investigate why SuppressWarnings didn't work
-        '-Xep:ConstructorInvokesOverridable:OFF',
 
         '-Werror',
     ]

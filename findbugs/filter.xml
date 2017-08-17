@@ -29,4 +29,19 @@
 		<Field name="REQUESTED_API_VERSION"/>
 		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,MS_SHOULD_BE_FINAL"/>
 	</Match>
+
+	<Match>
+		<!-- This is already checked by error-prone compiler -->
+		<Bug pattern="RV_RETURN_VALUE_IGNORED"/>
+	</Match>
+
+	<Match>
+		<!-- Doesn't play well with Butterknife -->
+		<Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
+	</Match>
+
+	<Match>
+		<!-- Already found by compiler -->
+		<Bug pattern="SE_NO_SERIALVERSIONID"/>
+	</Match>
 </FindBugsFilter>

@@ -113,10 +113,11 @@ def definePMD(variant) {
 }
 
 def getVariants() {
+    def property = 'applicationVariants'
     if (project.plugins.hasPlugin('com.android.library')) {
-        project.android['libraryVariants']
+        property = 'libraryVariants'
     }
-    project.android['applicationVariants']
+    project.android[property]
 }
 
 getVariants().all { variant ->
@@ -220,6 +221,9 @@ tasks.withType(JavaCompile) {
 
         // Doesn't work with ButterKnife.
         '-Xep:ConstructorLeaksThis:OFF',
+
+        // TODO(dotdoom): investigate why SuppressWarnings didn't work
+        '-Xep:ConstructorInvokesOverridable:OFF',
 
         '-Werror',
     ]

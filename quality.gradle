@@ -34,7 +34,6 @@ pmd {
 findbugs {
     // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.FindBugsExtension.html
     toolVersion '3.0.1'
-    group 'Verification'
     effort = 'max'
     // Contrary to what one may think, 'low' means 'tell about everything'
     reportLevel = 'low'
@@ -55,7 +54,6 @@ def defineCheckstyle(variant) {
     def name = variant.name.capitalize()
     task "checkstyle$name", type: Checkstyle, {
         // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Checkstyle.html
-        group 'Verification'
         source sourceDirs(variant)
         classpath = variant.javaCompile.classpath
         ignoreFailures = false
@@ -85,7 +83,6 @@ def definePMD(variant) {
     def name = variant.name.capitalize()
     task "pmd$name", type: Pmd, {
         // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.Pmd.html
-        group 'Verification'
         source sourceDirs(variant)
         classpath = variant.javaCompile.classpath
         ignoreFailures = false

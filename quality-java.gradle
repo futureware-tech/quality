@@ -1,0 +1,129 @@
+apply plugin: 'checkstyle'
+apply plugin: 'pmd'
+apply plugin: 'findbugs'
+
+buildscript {
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+    dependencies {
+        classpath 'net.ltgt.gradle:gradle-errorprone-plugin:0.0.10'
+    }
+}
+apply plugin: net.ltgt.gradle.errorprone.ErrorPronePlugin
+
+// TODO(dotdoom): replace 'buildscript' and 'apply' above with just
+// plugins {
+//     id 'net.ltgt.errorprone' version '0.0.10'
+// }
+// once the section about "Can only be used in build scripts" goes away:
+// https://docs.gradle.org/4.1-rc-1/userguide/plugins.html#plugins_dsl_limitations
+
+checkstyle {
+    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html
+    toolVersion '7.8.2'
+}
+
+pmd {
+    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.PmdExtension.html
+    toolVersion '5.8.0'
+}
+
+findbugs {
+    // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.FindBugsExtension.html
+    toolVersion '3.0.1'
+}
+
+def definePrintTask(target) {
+    def name = target.getName().capitalize()
+    def type = target.getClass().getSimpleName().toLowerCase().replace("_decorated", "")
+    task "print$name", {
+        doLast {
+            def destination = target.reports.getXml().getDestination()
+                    .getAbsolutePath()
+            ant.xslt(
+                in: destination,
+                out: destination + '.txt',
+                style: "config/$type/text.xslt",
+            )
+            System.err.println file(destination + '.txt').text
+        }
+    }
+    target.finalizedBy "print$name"
+}
+
+task checkQuality
+
+project.afterEvaluate {
+    tasks.withType(FindBugs) {
+        // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.FindBugs.html
+        effort = 'max'
+        // Contrary to what one may think, 'low' means 'tell about everything'
+        reportLevel = 'low'
+        excludeFilter = file('config/findbugs/filter.xml')
+
+        reports {
+            emacs.enabled false
+            html.enabled false
+            text.enabled false
+            xml {
+                enabled true
+                setWithMessages true
+            }
+        }
+        definePrintTask(it)
+        checkQuality.dependsOn(it)
+    }
+
+    tasks.withType(Checkstyle) {
+        ignoreFailures = false
+
+        showViolations = false
+        reports {
+            xml.enabled true
+            html.enabled false
+        }
+        definePrintTask(it)
+        checkQuality.dependsOn(it)
+    }
+
+    tasks.withType(Pmd) {
+        ignoreFailures = false
+        ruleSetFiles = files('config/pmd/ruleset.xml')
+
+        consoleOutput = false
+        reports {
+            xml.enabled true
+            html.enabled false
+        }
+        definePrintTask(it)
+        checkQuality.dependsOn(it)
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += [
+        // Disable "No processor claimed any of these annotations" (@Inject).
+        '-Xlint:all,-processing',
+        '-XepAllDisabledChecksAsWarnings',
+        '-XepDisableWarningsInGeneratedCode',
+
+        // Don't want to annotate all modifiable references with "@Var".
+        '-Xep:Var:OFF',
+
+        // Sad but need Firebase-generated R.java to have @Generated.
+        '-Xep:ConstantField:OFF',
+        '-Xep:PrivateConstructorForUtilityClass:OFF',
+
+        // Doesn't play well with Dagger.
+        '-Xep:InjectScopeAnnotationOnInterfaceOrAbstractClass:OFF',
+
+        // Doesn't work with ButterKnife.
+        '-Xep:ConstructorLeaksThis:OFF',
+
+        // TODO(dotdoom): investigate why SuppressWarnings didn't work
+        '-Xep:ConstructorInvokesOverridable:OFF',
+
+        '-Werror',
+    ]
+}

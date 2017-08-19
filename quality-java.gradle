@@ -81,6 +81,7 @@ project.afterEvaluate {
 
     tasks.withType(Checkstyle) {
         ignoreFailures = false
+        configFile = file("$configPath/checkstyle/checkstyle.xml")
 
         showViolations = false
         reports {

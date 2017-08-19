@@ -74,8 +74,8 @@ task printLint {
             // Write JUnit-style lint for CircleCI to pick up.
             ant.xslt(
                 in: destination,
-                out: "${project.rootDir}/app/build/test-results/lint/results.xml",
-                style: 'config/android-lint/junit.xslt',
+                out: "$buildDir/test-results/lint/results.xml",
+                style: "$configPath/android-lint/junit.xslt",
             )
             ant.xslt(
                 in: destination,

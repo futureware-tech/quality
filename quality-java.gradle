@@ -12,6 +12,10 @@ buildscript {
 }
 apply plugin: net.ltgt.gradle.errorprone.ErrorPronePlugin
 
+ext {
+    configPath = buildscript.sourceFile.getParent()
+}
+
 // TODO(dotdoom): replace 'buildscript' and 'apply' above with just
 // plugins {
 //     id 'net.ltgt.errorprone' version '0.0.10'
@@ -44,7 +48,7 @@ def definePrintTask(target) {
             ant.xslt(
                 in: destination,
                 out: destination + '.txt',
-                style: "config/$type/text.xslt",
+                style: "$configPath/$type/text.xslt",
             )
             System.err.println file(destination + '.txt').text
         }
@@ -60,7 +64,7 @@ project.afterEvaluate {
         effort = 'max'
         // Contrary to what one may think, 'low' means 'tell about everything'
         reportLevel = 'low'
-        excludeFilter = file('config/findbugs/filter.xml')
+        excludeFilter = file("$configPath/findbugs/filter.xml")
 
         reports {
             emacs.enabled false
@@ -89,7 +93,7 @@ project.afterEvaluate {
 
     tasks.withType(Pmd) {
         ignoreFailures = false
-        ruleSetFiles = files('config/pmd/ruleset.xml')
+        ruleSetFiles = files("$configPath/pmd/ruleset.xml")
 
         consoleOutput = false
         reports {

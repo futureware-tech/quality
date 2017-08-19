@@ -1,4 +1,4 @@
-apply from: 'quality-java'
+apply from: 'config/quality-java.gradle'
 
 buildscript {
     repositories {

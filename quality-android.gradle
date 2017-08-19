@@ -1,4 +1,4 @@
-apply from: 'config/quality-java.gradle'
+apply from: "${buildscript.sourceFile.getParent()}/quality-java.gradle"
 
 buildscript {
     repositories {
@@ -80,7 +80,7 @@ task printLint {
             ant.xslt(
                 in: destination,
                 out: destination + '.txt',
-                style: 'config/android-lint/text.xslt',
+                style: "$configPath/android-lint/text.xslt",
             )
             System.err.println file(destination + '.txt').text
         }

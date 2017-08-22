@@ -125,6 +125,9 @@ tasks.withType(JavaCompile) {
 
         // Doesn't work with ButterKnife.
         '-Xep:ConstructorLeaksThis:OFF',
+        
+        // TODO(dotdoom): https://github.com/google/error-prone/issues/708
+        '-Xep:FieldMissingNullable:OFF',
 
         // TODO(dotdoom): investigate why SuppressWarnings didn't work
         '-Xep:ConstructorInvokesOverridable:OFF',

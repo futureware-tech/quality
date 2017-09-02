@@ -109,7 +109,8 @@ project.afterEvaluate {
 tasks.withType(JavaCompile) {
     options.compilerArgs += [
         // Disable "No processor claimed any of these annotations" (@Inject).
-        '-Xlint:all,-processing',
+        // Disable "MethodParameters introduced in 52 an ignored in 51" (migration).
+        '-Xlint:all,-processing,-classfile',
         '-XepAllDisabledChecksAsWarnings',
         '-XepDisableWarningsInGeneratedCode',
 

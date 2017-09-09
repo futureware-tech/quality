@@ -136,6 +136,9 @@ tasks.withType(JavaCompile) {
         // TODO(dotdoom): fix code
         '-Xep:ReturnMissingNullable:OFF',
 
+        // We don't have a package providing @Immutable annotation
+        '-Xep:ImmutableEnumChecker:OFF',
+
         '-Werror',
     ]
 }

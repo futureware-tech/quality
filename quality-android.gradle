@@ -61,7 +61,7 @@ getVariants().all { variant ->
 }
 
 project.afterEvaluate {
-    tasks.withType(tasks['lint'].class) {
+    tasks.withType(tasks['lint'].class.getSuperclass().getSuperclass()) {
         finalizedBy 'printLint'
     }
 }

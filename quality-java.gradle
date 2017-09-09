@@ -38,8 +38,9 @@ findbugs {
     toolVersion '3.0.1'
 }
 
-def definePrintTask(target) {
+def definePrintTask(target, sourceSetPrefix) {
     def name = target.getName().capitalize()
+    def sourceSetName = target.getName().substring(sourceSetPrefix.length())
     def type = target.getClass().getSimpleName().toLowerCase().replace("_decorated", "")
     task "print$name", {
         doLast {
@@ -54,9 +55,12 @@ def definePrintTask(target) {
         }
     }
     target.finalizedBy "print$name"
+    def checkQualityTaskName = "checkQuality$sourceSetName"
+    if (!tasks.findByName(checkQualityTaskName)) {
+        task "$checkQualityTaskName"
+    }
+    tasks[checkQualityTaskName].dependsOn(target)
 }
-
-task checkQuality
 
 project.afterEvaluate {
     tasks.withType(FindBugs) {
@@ -75,8 +79,7 @@ project.afterEvaluate {
                 setWithMessages true
             }
         }
-        definePrintTask(it)
-        checkQuality.dependsOn(it)
+        definePrintTask(it, 'findbugs')
     }
 
     tasks.withType(Checkstyle) {
@@ -88,8 +91,7 @@ project.afterEvaluate {
             xml.enabled true
             html.enabled false
         }
-        definePrintTask(it)
-        checkQuality.dependsOn(it)
+        definePrintTask(it, 'checkstyle')
     }
 
     tasks.withType(Pmd) {
@@ -101,8 +103,7 @@ project.afterEvaluate {
             xml.enabled true
             html.enabled false
         }
-        definePrintTask(it)
-        checkQuality.dependsOn(it)
+        definePrintTask(it, 'pmd')
     }
 }
 

@@ -1,5 +1,7 @@
 apply from: "${buildscript.sourceFile.getParent()}/quality-java.gradle"
 
+// FIXME(https://docs.gradle.org/4.1-rc-2/userguide/plugins.html#sec:build_scripts_only):
+// Replace buildscript+apply with just plugins {}.
 buildscript {
     repositories {
         maven { url 'https://plugins.gradle.org/m2/' }
@@ -9,8 +11,6 @@ buildscript {
     }
 }
 apply plugin: com.chaitanyapramod.gradle.android.findbugs.FindBugsAndroidPlugin
-
-// TODO(dotdoom): replace 'buildscript' and 'apply' above with just plugins {}
 
 // Have to create our own tasks because Android's sourceSets:
 // https://android.googlesource.com/platform/tools/build/+/master/gradle/src/main/groovy/com/android/build/gradle/internal/api/DefaultAndroidSourceSet.java

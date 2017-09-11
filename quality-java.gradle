@@ -2,6 +2,11 @@ apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 apply plugin: 'findbugs'
 
+// FIXME(https://docs.gradle.org/4.1-rc-2/userguide/plugins.html#sec:build_scripts_only):
+// Replace buildscript+apply with just
+// plugins {
+//     id 'net.ltgt.errorprone' version '0.0.10'
+// }
 buildscript {
     repositories {
         maven { url 'https://plugins.gradle.org/m2/' }
@@ -15,13 +20,6 @@ apply plugin: net.ltgt.gradle.errorprone.ErrorPronePlugin
 ext {
     configPath = buildscript.sourceFile.getParent()
 }
-
-// TODO(dotdoom): replace 'buildscript' and 'apply' above with just
-// plugins {
-//     id 'net.ltgt.errorprone' version '0.0.10'
-// }
-// once the section about "Can only be used in build scripts" goes away:
-// https://docs.gradle.org/4.1-rc-1/userguide/plugins.html#plugins_dsl_limitations
 
 checkstyle {
     // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html

@@ -6,7 +6,7 @@
 
 	<Match>
 		<!--
-			Instrumented tests have @Role-decorated fields that appear to
+			Instrumented tests have @Rule-decorated fields that appear to
 			FindBugs as unused because it doesn't see the test runner class.
 		-->
 		<Class name="~.*Test"/>
@@ -24,7 +24,7 @@
 
 	<Match>
 		<!--
-			slf4j uses this field with dynamic binding to veryfy API version.
+			slf4j uses this field with dynamic binding to verify API version.
 		-->
 		<Field name="REQUESTED_API_VERSION"/>
 		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,MS_SHOULD_BE_FINAL"/>

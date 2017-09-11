@@ -71,8 +71,11 @@
 		<!-- Don't want the last argument to be varargs -->
 		<exclude name="UseVarargs"/>
 
-		<!-- Switch is more readable in onAddUpdateButtonClick listeners -->
-		<!-- TODO(dotdoom): re-enable once each UI element gets its own onAddUpdateButtonClick -->
+		<!--
+			"switch" is more readable than "if" in menu click handlers,
+			which Butterknife won't support:
+			https://github.com/JakeWharton/butterknife/issues/41.
+		-->
 		<exclude name="TooFewBranchesForASwitchStatement"/>
 
 		<!--

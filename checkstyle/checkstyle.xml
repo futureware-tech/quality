@@ -215,7 +215,6 @@
 		<module name="TypeName"/>
 		<module name="UncommentedMain"/>
 		<module name="UnnecessaryParentheses"/>
-		<module name="UnusedImports"/>
 		<module name="UpperEll"/>
 		<module name="VariableDeclarationUsageDistance"/>
 		<module name="VisibilityModifier">
@@ -271,6 +270,9 @@
 
 		We don't need package javadoc files.
 			<module name="JavadocPackage"/>
+
+		Covered by error-prone compiler.
+			<module name="UnusedImports"/> [RemoveUnusedImports]
 
 		Not a strong signal that something is wrong with the code.
 		Some of these checks are an overkill.

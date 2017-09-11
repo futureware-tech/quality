@@ -86,7 +86,6 @@
 		<module name="ExecutableStatementCount"/>
 		<module name="ExplicitInitialization"/>
 		<module name="FallThrough"/>
-		<module name="FileContentsHolder"/>
 		<module name="FinalClass"/>
 		<module name="FinalParameters"/>
 		<module name="GenericWhitespace"/>

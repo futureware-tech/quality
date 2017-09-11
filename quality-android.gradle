@@ -99,5 +99,13 @@ android {
         htmlReport false
         xmlReport true
         xmlOutput file('build/reports/android-lint.xml')
+
+        if (System.getenv('CIRCLE_BRANCH') == 'master' ||
+                System.getenv('CIRCLE_TAG')) {
+            // When building release / master on CircleCI, obsolete dependencies
+            // are often a timing issue. Should not block the release.
+            ignore 'GradleDependency'
+            ignore 'NewerVersionAvailable'
+        }
     }
 }

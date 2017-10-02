@@ -19,9 +19,17 @@
 		<property name="header" value="^/\*$\n^ \* Copyright "/>
 		<property name="fileExtensions" value="java"/>
 	</module>
-	<module name="NewlineAtEndOfFile"/>
+	<module name="NewlineAtEndOfFile">
+		<property name="lineSeparator" value="lf"/>
+	</module>
 	<module name="Translation"/>
 	<module name="UniqueProperties"/>
+
+	<module name="RegexpSingleline">
+		<property name="format" value="(TODO|ToDo|todo|Todo)([^(]|$)"/>
+		<property name="message"
+			value="Correct TODO format is: TODO(username): ..."/>
+	</module>
 
 	<!-- Respect @SuppressWarnings in the code -->
 	<module name="SuppressWarningsFilter"/>
@@ -118,6 +126,11 @@
 		<module name="LeftCurly"/>
 		<module name="LineLength">
 			<property name="max" value="100"/>
+			<!--
+				Controversial. Expect people to use goo.gl or similar.
+				<property name="ignorePattern"
+					value="^ *(//|\*) https?://\S+$"/>
+			-->
 		</module>
 		<module name="LocalFinalVariableName"/>
 		<module name="LocalVariableName"/>
@@ -207,9 +220,6 @@
 		<module name="SuperFinalize"/>
 
 		<module name="ThrowsCount"/>
-		<module name="TodoComment">
-			<property name="format" value="(TODO|ToDo|todo|Todo)([^(]|$)"/>
-		</module>
 		<module name="TrailingComment"/>
 		<module name="TypecastParenPad"/>
 		<module name="TypeName"/>
@@ -262,7 +272,6 @@
 			<module name="Regexp"/>
 			<module name="RegexpMultiline"/>
 			<module name="RegexpOnFilename"/>
-			<module name="RegexpSingleline"/>
 
 		We are okay relying on default constructor being implicitly defined
 		when no other constructors are defined.
@@ -280,6 +289,7 @@
 			<module name="ReturnCount"/>
 			<module name="ClassDataAbstractionCoupling"/>
 			<module name="DesignForExtension"/>
+			<module name="TodoComment"/>
 		-->
 	</module>
 </module>

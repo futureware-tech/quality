@@ -20,6 +20,9 @@ Bonus:
   format of `<filename>:<line>: <check name>: <error message>`, allowing to pipe
   the output into most editors and IDEs error windows
 
+* `resolveDependencies` task that will pre-download all dependencies for all
+  configurations (useful for caching in CI)
+
 Meta tasks:
 
 * Android: `checkQuality<variant name>` (e.g. `checkQualityDebug`)

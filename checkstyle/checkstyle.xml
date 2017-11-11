@@ -30,6 +30,12 @@
 		<property name="message"
 			value="Correct TODO format is: TODO(username): ..."/>
 	</module>
+	<module name="RegexpMultiline">
+		<property name="format"
+			value="@SuppressWarnings[^(]*[(][^(*]+[)]"/>
+		<property name="message"
+			value="SuppressWarnings requires /* annotation */"/>
+	</module>
 
 	<!-- Respect @SuppressWarnings in the code -->
 	<module name="SuppressWarningsFilter"/>
@@ -270,7 +276,6 @@
 		configuration.
 			<module name="ImportControl"/>
 			<module name="Regexp"/>
-			<module name="RegexpMultiline"/>
 			<module name="RegexpOnFilename"/>
 
 		We are okay relying on default constructor being implicitly defined

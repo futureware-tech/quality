@@ -139,6 +139,9 @@ tasks.withType(JavaCompile) {
         // We don't have a package providing @Immutable annotation
         '-Xep:ImmutableEnumChecker:OFF',
 
+        // FIXME(https://github.com/google/error-prone/issues/629): to be removes
+        '-Xep:StaticOrDefaultInterfaceMethod:OFF',
+
         '-Werror',
     ]
 }

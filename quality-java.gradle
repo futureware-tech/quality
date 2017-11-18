@@ -25,7 +25,8 @@ ext {
 
 checkstyle {
     // https://docs.gradle.org/current/dsl/org.gradle.api.plugins.quality.CheckstyleExtension.html
-    toolVersion '8.2'
+    // http://checkstyle.sourceforge.net/releasenotes.html
+    toolVersion '8.4'
 }
 
 pmd {

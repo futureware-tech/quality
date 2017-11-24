@@ -136,10 +136,10 @@ tasks.withType(JavaCompile) {
         // FIXME(https://github.com/google/error-prone/issues/708): NPE
         '-Xep:FieldMissingNullable:OFF',
 
-        // We don't have a package providing @Immutable annotation
+        // We don't have a package providing @Immutable annotation.
         '-Xep:ImmutableEnumChecker:OFF',
 
-        // FIXME(https://github.com/google/error-prone/issues/629): to be removes
+        // This works well on Android now with Desugar.
         '-Xep:StaticOrDefaultInterfaceMethod:OFF',
 
         '-Werror',

@@ -29,9 +29,17 @@
 		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,MS_SHOULD_BE_FINAL"/>
 	</Match>
 
+	<!-- Butterknife magic -->
 	<Match>
-		<!-- Doesn't play well with Butterknife -->
+		<!-- With findViewById() we know the type -->
 		<Bug pattern="BC_UNCONFIRMED_CAST_OF_RETURN_VALUE"/>
+	</Match>
+	<Match>
+		<!--
+			After Butterknife.bind() certain fields are assigned, but this
+			assignemnt isn't visible to FindBugs.
+		-->
+		<Bug pattern="UR_UNINIT_READ"/>
 	</Match>
 
 	<!-- Already found by compiler -->

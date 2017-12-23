@@ -29,6 +29,11 @@
 		<Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD,MS_SHOULD_BE_FINAL"/>
 	</Match>
 
+	<Match>
+		<!-- This comes from slf4j plugin. We always use static LOGGER. -->
+		<Bug pattern="SLF4J_LOGGER_SHOULD_BE_NON_STATIC"/>
+	</Match>
+
 	<!-- Butterknife magic -->
 	<Match>
 		<!-- With findViewById() we know the type -->

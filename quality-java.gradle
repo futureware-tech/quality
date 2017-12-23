@@ -146,6 +146,10 @@ tasks.withType(JavaCompile) {
     ]
 }
 
+dependencies {
+    findbugsPlugins 'jp.skypencil.findbugs.slf4j:bug-pattern:1.2.4@jar'
+}
+
 task resolveDependencies {
     doLast {
         project.configurations.each { configuration ->

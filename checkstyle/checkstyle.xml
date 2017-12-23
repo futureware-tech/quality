@@ -190,6 +190,13 @@
 		<module name="RedundantImport"/>
 		<module name="RedundantModifier"/>
 		<module name="RegexpSinglelineJava">
+			<property name="id" value="NoSystemCurrentTime"/>
+			<property name="format" value="System.currentTimeMillis"/>
+			<property name="message"
+				value="Do not use Java System.currentTimeMillis; Use ServerClock instead"/>
+			<property name="ignoreComments" value="true"/>
+		</module>
+		<module name="RegexpSinglelineJava">
 			<property name="id" value="NoAndroidLog"/>
 			<property name="format" value="\sLog\."/>
 			<property name="message"

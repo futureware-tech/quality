@@ -4,6 +4,15 @@
 		<Source name="~(Manifest|R)\.java"/>
 	</Match>
 
+	<!--
+		For some reason, FindBugs does not trigger for many fields
+		not initialized in constructor and not having a null check
+		when dereferenced, which is very important for lazy load:
+		http://findbugs.sourceforge.net/bugDescriptions.html#UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR
+
+		TODO(dotdoom): switch to SpotBugs (also switch slf4j plugin).
+	-->
+
 	<Match>
 		<!--
 			Instrumented tests have @Rule-decorated fields that appear to
